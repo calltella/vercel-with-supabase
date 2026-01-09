@@ -33,11 +33,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-              <pre>
-      URL: {process.env.NEXT_PUBLIC_SUPABASE_URL}
-      {'\n'}
-      KEY: {process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY?.slice(0, 20)}
-    </pre>
+          <pre>
+            URL: {process.env.NEXT_PUBLIC_SUPABASE_URL}
+            {'\n'}
+            KEY: {process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY?.slice(0, 20)}
+          </pre>
           {children}
         </ThemeProvider>
       </body>

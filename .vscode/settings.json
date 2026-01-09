@@ -14,7 +14,7 @@
   "[typescriptreact]": {
     "editor.tabSize": 2,
     "editor.insertSpaces": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode" // TSXは必ずPrettierで
+    "editor.defaultFormatter": "vscode.typescript-language-features" // TSXは必ずPrettierで
   },
 
   // 参考: TS（.ts）も揃える場合
