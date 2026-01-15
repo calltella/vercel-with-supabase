@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { createNote } from "./actions";
 
+export const dynamic = "force-dynamic"; // 動的ページには必要(vercel)
+
 export default async function NotesPage() {
   const notes = await prisma.notes.findMany({
     orderBy: { createdAt: "desc" },
