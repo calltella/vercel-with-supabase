@@ -1,10 +1,10 @@
 // /app/scripts/tinker.ts
-import {prisma} from "@/prisma";
+import { prisma } from "@/lib/prisma";
 
-// const prisma = prismaModule.prisma;
+// npx tsx script/tinker.ts 
 
 async function main() {
-  console.log(await prisma.migrateAplineBase.count());
+  console.log(await prisma.notes.count());
 }
 
 main()
