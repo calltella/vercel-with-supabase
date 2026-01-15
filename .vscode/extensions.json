@@ -1,9 +1,11 @@
 {
   "recommendations": [
+    "ms-ceintl.vscode-language-pack-ja",
     "dbaeumer.vscode-eslint", 
     "esbenp.prettier-vscode",
     "bierner.markdown-mermaid",
     "bradlc.vscode-tailwindcss",
     "prisma.prisma",
+    "shd101wyy.markdown-preview-enhanced",
   ]
 }

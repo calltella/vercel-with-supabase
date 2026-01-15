@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../app/generated/prisma"
+  provider = "prisma-client-js"
+  //output   = "../app/generated/prisma" // 指定しない
 }
 
 datasource db {
@@ -9,9 +9,10 @@ datasource db {
 }
 
 model Notes {
-  id        Int   @id @default(autoincrement())
-  title     String?
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  createdAt DateTime @default(now())
 
   @@map("notes")
 }
-
