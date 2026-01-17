@@ -1,14 +1,23 @@
+// /app/app/notes/page.tsx
 import { prisma } from "@/lib/prisma";
 import { createNote } from "./actions";
 import { Notes } from "@prisma/client";
 import { utcFormatDateTimeWithDay } from "@/lib/utils/date"
 
+export const runtime = "nodejs"; // 初回接続でVercelが落ちる
 export const dynamic = "force-dynamic"; // 動的ページには必要(vercel)
 
 export default async function NotesPage() {
-  const notes: Notes[] = await prisma.notes.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+
+  let notes: Notes[] = [];
+
+  try {
+    notes = await prisma.notes.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+  } catch (e) {
+    console.error("Prisma error:", e);
+  }
 
   return (
     <main className="mx-auto max-w-3xl p-6">
