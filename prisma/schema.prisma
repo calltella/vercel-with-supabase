@@ -7,20 +7,24 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
 // prisma/schema.prisma
 
 model User {
-  id            String   @id @default(cuid())
-  email         String   @unique
+  id            String    @id @default(cuid())
+  email         String    @unique
   name          String?
   avatarUrl     String?
   passwordHash  String?
   emailVerified DateTime?
-  isActive      Boolean  @default(true)
-  role          UserRole @default(USER)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  isActive      Boolean   @default(true)
+  role          UserRole  @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
   deletedAt     DateTime?
+
+  accounts Account[]
+  sessions Session[]
 
   @@index([email])
   @@map("users")
@@ -29,6 +33,33 @@ model User {
 enum UserRole {
   USER
   ADMIN
+}
+
+model Account {
+  id                String @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  user              User   @relation(fields: [userId], references: [id])
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }
 
 model Notes {

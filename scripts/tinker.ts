@@ -1,5 +1,6 @@
 // /app/scripts/tinker.ts
 import { prisma } from "@/lib/prisma";
+import "@/scripts/env";
 
 // npx tsx script/tinker.ts 
 

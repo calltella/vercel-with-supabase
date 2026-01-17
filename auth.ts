@@ -1,6 +1,7 @@
 // /app/auth.ts
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import Google from "next-auth/providers/google";
 
 import PostgresAdapter from "@auth/pg-adapter";
 import { Pool } from "pg";
@@ -12,6 +13,8 @@ const pool = new Pool({
     ? { rejectUnauthorized: false }
     : false,
 });
+
+const isProduction = process.env.NODE_ENV === "production";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PostgresAdapter(pool),
@@ -45,5 +48,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return user;
       },
     }),
+    // --- 本番環境のみ OAuth を追加 ---
+    ...(isProduction
+      ? [
+          Google({
+            clientId: process.env.GOOGLE_CLIENT_ID!,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+          }),
+        ]
+      : []),
   ],
 });
