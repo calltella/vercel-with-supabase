@@ -3,7 +3,7 @@
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { SignIn } from "@/components/sign-in"
+import GoogleSignIn from "@/components/GoogleSignIn"
 
 export default function LoginPage() {
   const router = useRouter();
@@ -81,7 +81,7 @@ export default function LoginPage() {
           {loading ? "ログイン中..." : "ログイン"}
         </button>
       </form>
-      <SignIn />
+      <GoogleSignIn />
     </div>
   );
 }
