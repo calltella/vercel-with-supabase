@@ -5,6 +5,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import GoogleSignIn from "@/components/GoogleSignIn"
 
+
+
+console.log('NODE_ENV=', process.env.NODE_ENV);
+console.log('VERCEL_ENV=', process.env.VERCEL_ENV);
+
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
