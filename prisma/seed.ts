@@ -1,5 +1,5 @@
 // /app/prisma/seed.ts
-import { PrismaClient, UserRole } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
@@ -16,19 +16,19 @@ async function main() {
     {
       email: 'admin@example.com',
       name: 'Admin User',
-      role: UserRole.ADMIN,
+      role: 'ADMIN' as const,
       password: 'admin1234',
     },
     {
       email: 'user1@example.com',
       name: 'Taro Yamada',
-      role: UserRole.USER,
+      role: 'USER' as const,
       password: 'password123',
     },
     {
       email: 'user2@example.com',
       name: 'Hanako Suzuki',
-      role: UserRole.USER,
+      role: 'USER' as const,
       password: 'password123',
     },
   ];
@@ -44,7 +44,7 @@ async function main() {
         name: user.name,
         role: user.role,
         passwordHash,
-        emailVerified: user.role === UserRole.ADMIN ? new Date() : null,
+        emailVerified: user.role === 'ADMIN' ? new Date() : null,
       },
     });
   }
