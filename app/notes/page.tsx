@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { createNote } from "./actions";
 import { Notes } from "@prisma/client";
+import { utcFormatDateTimeWithDay } from "@/lib/utils/date"
 
 export const dynamic = "force-dynamic"; // 動的ページには必要(vercel)
 
@@ -50,7 +51,7 @@ export default async function NotesPage() {
               <h2 className="font-semibold">{note.title}</h2>
               <p className="mt-2 text-gray-700">{note.content}</p>
               <p className="mt-2 text-xs text-gray-400">
-                {new Date(note.createdAt).toLocaleString("ja-JP")}
+                {utcFormatDateTimeWithDay(note.createdAt)}
               </p>
             </li>
           ))}
