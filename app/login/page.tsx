@@ -3,12 +3,7 @@
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import GoogleSignIn from "@/components/GoogleSignIn"
-
-
-
-console.log('NODE_ENV=', process.env.NODE_ENV);
-console.log('VERCEL_ENV=', process.env.VERCEL_ENV);
+import GoogleSignIn from "@/components/GoogleSignIn";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -38,12 +33,11 @@ export default function LoginPage() {
     router.push("/");
   };
 
+  const isProduction = process.env.NODE_ENV === "production";
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-sm rounded-lg bg-white p-6 shadow"
-      >
+      <div className="w-full max-w-sm rounded-lg bg-white p-6 shadow">
         <h1 className="mb-6 text-center text-2xl font-bold">
           ログイン
         </h1>
@@ -52,41 +46,57 @@ export default function LoginPage() {
           <p className="mb-4 text-sm text-red-600">{error}</p>
         )}
 
-        <div className="mb-4">
-          <label className="mb-1 block text-sm font-medium">
-            メールアドレス
-          </label>
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded border px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-300"
-          />
-        </div>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="mb-1 block text-sm font-medium">
+              メールアドレス
+            </label>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full rounded border px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-300"
+            />
+          </div>
 
-        <div className="mb-6">
-          <label className="mb-1 block text-sm font-medium">
-            パスワード
-          </label>
-          <input
-            type="password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded border px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-300"
-          />
-        </div>
+          <div className="mb-6">
+            <label className="mb-1 block text-sm font-medium">
+              パスワード
+            </label>
+            <input
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full rounded border px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-300"
+            />
+          </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full rounded bg-blue-600 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
-        >
-          {loading ? "ログイン中..." : "ログイン"}
-        </button>
-      </form>
-      <GoogleSignIn />
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full rounded bg-blue-600 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
+          >
+            {loading ? "ログイン中..." : "ログイン"}
+          </button>
+        </form>
+
+        {/* 本番環境のみ OAuth */}
+        {isProduction && (
+          <>
+            <div className="my-6 flex items-center">
+              <div className="flex-1 border-t" />
+              <span className="mx-2 text-xs text-gray-500">
+                または
+              </span>
+              <div className="flex-1 border-t" />
+            </div>
+
+            <GoogleSignIn />
+          </>
+        )}
+      </div>
     </div>
   );
 }
