@@ -63,4 +63,11 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model Notes {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  createdAt DateTime @default(now())
 
+  @@map("notes")
+}
