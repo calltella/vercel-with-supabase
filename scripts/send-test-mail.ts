@@ -1,3 +1,4 @@
+// /app/scripts/send-test-mail.ts
 import "@/scripts/env";
 import { sendMail } from "@/lib/mail";
 

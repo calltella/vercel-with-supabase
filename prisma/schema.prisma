@@ -71,12 +71,3 @@ model Notes {
 
   @@map("notes")
 }
-
-model TestTable {
-  id        String   @id @default(uuid())
-  title     String
-  content   String
-  createdAt DateTime @default(now())
-
-  @@map("test_table")
-}

@@ -56,16 +56,6 @@ CREATE TABLE "notes" (
     CONSTRAINT "notes_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
-CREATE TABLE "test_table" (
-    "id" TEXT NOT NULL,
-    "title" TEXT NOT NULL,
-    "content" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "test_table_pkey" PRIMARY KEY ("id")
-);
-
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
