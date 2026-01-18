@@ -1,5 +1,5 @@
 // /app/app/notes/page.tsx
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { createNote } from "./actions";
 import { Notes } from "@prisma/client";
 import { utcFormatDateTimeWithDay } from "@/lib/utils/date"
