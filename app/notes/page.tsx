@@ -14,6 +14,7 @@ export default async function NotesPage() {
   try {
     notes = await prisma.notes.findMany({
       orderBy: { createdAt: "desc" },
+      cacheStrategy: { ttl: 60 },
     });
   } catch (e) {
     console.error("Prisma error:", e);
