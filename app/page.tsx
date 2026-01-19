@@ -9,6 +9,12 @@ export default function Home() {
       >
         Notes
       </Link>
+      <Link
+        href="/login"
+        className="md:px-4 py-2 block text-(--color-text) hover:text-(--color-secondary)"
+      >
+        Login
+      </Link>
     </main>
   );
 }

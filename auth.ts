@@ -5,7 +5,9 @@ import Google from "next-auth/providers/google";
 
 import PostgresAdapter from "@auth/pg-adapter";
 import { Pool } from "pg";
-import { getUserFromDb } from "@/lib/utils/auth";
+import { getUserFromDb, getAccountFromDb } from "@/lib/utils/auth";
+import type { UserRole, ThemeMode } from "@/app/types/user";
+import type { ColorThemeKey } from "@/app/theme/colorTheme";
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -26,8 +28,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // You can specify which fields should be submitted, by adding keys to the `credentials` object.
       // e.g. domain, username, password, 2FA token, etc.
       credentials: {
-        email: {},
-        password: {},
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
         //let user = null;
@@ -46,9 +48,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           // Optionally, this is also the place you could do a user registration
           return null;
         }
-
         // return user object with their profile data
-        return user;
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name ?? null,
+          role: user.role,
+        };
       },
     }),
     // --- 本番環境のみ OAuth を追加 ---
@@ -61,4 +67,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       ]
       : []),
   ],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.role = (user as { role?: string }).role;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      const userId = token.id as string;
+      const account = await getAccountFromDb(userId)
+      session.user.id = token.id as string;
+      session.user.role = token.role as UserRole;
+      session.user.themeMode = account.themeMode as ThemeMode;
+      session.user.themeColor = account.themeColor as ColorThemeKey;
+      return session;
+    },
+  },
+
+
 });

@@ -1,5 +1,7 @@
-import  prisma  from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import type {ThemeMode} from "@/app/types/user"
+import type { ColorThemeKey } from "@/app/theme/colorTheme";
 
 /**
  * メールアドレスとハッシュ化前パスワードでユーザーを取得
@@ -37,6 +39,20 @@ export async function getUserFromDb(
     id: user.id,
     name: user.name,
     email: user.email,
-    avatarUrl: user.avatarUrl,
+    role: user.role,
   };
+
+
+}
+export async function getAccountFromDb(userId: string) {
+  const account = await prisma.account.findFirst({
+    where: { userId: userId },
+  });
+  console.log(`account: ${account}`)
+  return {
+    id: account?.id,
+    themeMode: account?.themeMode as ThemeMode,
+    themeColor: account?.colorThemes as ColorThemeKey,
+  }
+
 }

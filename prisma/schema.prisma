@@ -1,4 +1,5 @@
 // /app/prisma/schema.prisma
+
 generator client {
   provider = "prisma-client-js"
   //output   = "../app/generated/prisma" // 指定しない
@@ -19,7 +20,7 @@ model User {
   passwordHash  String?
   emailVerified DateTime?
   isActive      Boolean   @default(true)
-  role          UserRole  @default(USER)
+  role          UserRole  @default(user)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   deletedAt     DateTime?
@@ -32,19 +33,22 @@ model User {
 }
 
 enum UserRole {
-  USER
-  ADMIN
+  user
+  admin
 }
 
 model Account {
   id                String @id @default(cuid())
   userId            String
   type              String
-  provider          String
-  providerAccountId String
+  themeMode         String
+  colorThemes       String
+  //provider          String
+  //providerAccountId String
   user              User   @relation(fields: [userId], references: [id])
 
-  @@unique([provider, providerAccountId])
+  //@@unique([provider, providerAccountId])
+  @@unique([userId, type])
 }
 
 model Session {
