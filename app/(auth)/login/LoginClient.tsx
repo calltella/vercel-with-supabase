@@ -1,37 +1,13 @@
+// /app/app/(auth)/login/LoginClient.tsx
 "use client";
 
-import { signIn } from "next-auth/react";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import GoogleSignIn from "@/components/GoogleSignIn";
+import { loginAction } from "./actions";
+import { useSearchParams } from "next/navigation";
 
-export default function LoginPage() {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    const res = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
-
-    setLoading(false);
-
-    if (res?.error) {
-      setError("メールアドレスまたはパスワードが違います");
-      return;
-    }
-
-    router.push("/");
-  };
+export default function LoginClient() {
+  const searchParams = useSearchParams();
+  const error = searchParams.get("error");
 
   const isProduction = process.env.NODE_ENV === "production";
 
@@ -43,19 +19,23 @@ export default function LoginPage() {
         </h1>
 
         {error && (
-          <p className="mb-4 text-sm text-red-600">{error}</p>
+          <p className="mb-4 text-sm text-red-600">
+            メールアドレスまたはパスワードが違います
+          </p>
         )}
 
-        <form onSubmit={handleSubmit}>
+        <form action={loginAction}>
+          {/* redirect 先を保持したい場合 */}
+          <input type="hidden" name="next" value="/user/dashboard" />
+
           <div className="mb-4">
             <label className="mb-1 block text-sm font-medium">
               メールアドレス
             </label>
             <input
               type="email"
+              name="email"
               required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               className="w-full rounded border px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-300"
             />
           </div>
@@ -66,19 +46,17 @@ export default function LoginPage() {
             </label>
             <input
               type="password"
+              name="password"
               required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               className="w-full rounded border px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-300"
             />
           </div>
 
           <button
             type="submit"
-            disabled={loading}
-            className="w-full rounded bg-blue-600 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
+            className="w-full rounded bg-blue-600 py-2 text-white hover:bg-blue-700"
           >
-            {loading ? "ログイン中..." : "ログイン"}
+            ログイン
           </button>
         </form>
 

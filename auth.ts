@@ -18,6 +18,9 @@ const isProduction = process.env.NODE_ENV === "production";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PostgresAdapter(pool),
+  session: {
+    strategy: "jwt",
+  },
   providers: [
     Credentials({
       // You can specify which fields should be submitted, by adding keys to the `credentials` object.
@@ -32,7 +35,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const { email, password } = credentials;
 
         if (typeof email !== "string" || typeof password !== "string") {
-          throw new Error("メールアドレスまたはパスワードの型が不正です");
+          return null;
         }
 
         // logic to verify if the user exists
@@ -41,7 +44,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!user) {
           // No user found, so this is their first attempt to login
           // Optionally, this is also the place you could do a user registration
-          throw new Error("Invalid credentials.");
+          return null;
         }
 
         // return user object with their profile data
@@ -51,11 +54,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     // --- 本番環境のみ OAuth を追加 ---
     ...(isProduction
       ? [
-          Google({
-            clientId: process.env.AUTH_GOOGLE_ID!,
-            clientSecret: process.env.AUTH_GOOGLE_SECRET!,
-          }),
-        ]
+        Google({
+          clientId: process.env.AUTH_GOOGLE_ID!,
+          clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+        }),
+      ]
       : []),
   ],
 });

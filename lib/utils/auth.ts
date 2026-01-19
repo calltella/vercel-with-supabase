@@ -34,7 +34,7 @@ export async function getUserFromDb(
 
   // NextAuth が要求する user オブジェクトを返す
   return {
-    id: user.id.toString(), // NextAuth は string を期待
+    id: user.id,
     name: user.name,
     email: user.email,
     avatarUrl: user.avatarUrl,

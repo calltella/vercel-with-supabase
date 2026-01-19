@@ -40,6 +40,6 @@ export async function proxy(req: NextRequest) {
 export const config = {
   matcher: [
     // ★ auth系APIは絶対に除外
-    "/((?!api/auth|login|_next/static|_next/image|favicon.ico).*)",
+    "/((?!api/auth|login|notes|_next/static|_next/image|favicon.ico).*)",
   ],
 };
