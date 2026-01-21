@@ -3,15 +3,21 @@
 /**
  * 本番環境用のPrismaDBをMigrateします
  * 使い方:
- *   npx tsx scripts/prisma-production reset
- *   npx tsx scripts/prisma-production deploy
+ *   npx tsx scripts/prisma-migrate-tool reset
+ *   npx tsx scripts/prisma-migrate-tool deploy
+ *   SEEDはnpx tsx scripts/seed を使う
  *   
  */
-
-import "@/scripts/env"; // .env.local を強制的に読み込む
+import dotenv from "dotenv";
 import { execSync } from 'child_process'
 import path from 'path'
 import { fileURLToPath } from 'url'
+
+/**
+ * 本番の場合は切替え
+ */
+//dotenv.config({ path: '.env.production' });
+dotenv.config({ path: '.env' });
 
 // ESモジュール用の __dirname 定義
 const __filename = fileURLToPath(import.meta.url)
@@ -32,6 +38,7 @@ const migrationName = process.argv[3]
 
 // 環境変数からデータベースURLを取得
 const databaseUrl = process.env.DATABASE_URL
+console.log(`実行データベース：${databaseUrl}`)
 
 if (!databaseUrl) {
   console.error('❌ エラー: DATABASE_URL環境変数が設定されていません')
@@ -43,7 +50,6 @@ if (!databaseUrl) {
 
 // スキーマファイルのパスを設定
 const schemaPath = path.join(__dirname, '..', 'prisma', 'schema.prisma')
-console.log(schemaPath)
 const config: MigrationConfig = {
   type: migrationType,
   name: migrationName,

@@ -3,14 +3,13 @@
 generator client {
   provider = "prisma-client-js"
   //output   = "../app/generated/prisma" // 指定しない
+  seed = "tsx prisma/seed.ts"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
-// prisma/schema.prisma
 
 model User {
   id            String    @id @default(cuid())
