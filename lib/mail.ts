@@ -1,6 +1,7 @@
 
 // /app/lib/mail.ts
 import nodemailer, { Transporter } from "nodemailer";
+import SMTPTransport from "nodemailer/lib/smtp-transport";
 
 type SendMailResult =
   | { ok: true; messageId: string }
@@ -12,25 +13,48 @@ let smtpTransport: Transporter | null = null;
 export function getTransporter(): Transporter {
   if (smtpTransport) return smtpTransport;
 
-  const { SMTP_HOST, SMTP_PORT, SMTP_SECURE } = process.env;
+  const {
+    SMTP_HOST,
+    SMTP_PORT,
+    SMTP_USER,
+    SMTP_PASS,
+  } = process.env;
+
   if (!SMTP_HOST || !SMTP_PORT) {
     throw new Error("SMTP_HOST or SMTP_PORT is not set");
   }
 
   const port = Number(SMTP_PORT);
+
   // 25番は必ず secure:false（465のみ true）
-  const secure = SMTP_SECURE === "true" || port === 465 ? true : false;
+  const secure = port === 465;
+
+  const isProduction = process.env.NODE_ENV === "production";
 
   // ★ 認証なし（auth / authMethod は指定しない）
-  smtpTransport = nodemailer.createTransport({
+  const options: SMTPTransport.Options = {
     host: SMTP_HOST,
     port,
-    secure,          // 25番は false
-    // このサーバは STARTTLS を広告していないので ignoreTLS は不要（付けても良い）
-    // ignoreTLS: true,
-    logger: process.env.NODE_ENV !== "production",
-    debug: process.env.NODE_ENV !== "production",
-  });
+    secure,
+    requireTLS: isProduction,
+    logger: !isProduction,
+    debug: !isProduction,
+  };
+
+  // 本番のみ
+  if (isProduction) {
+    if (!SMTP_USER || !SMTP_PASS) {
+      throw new Error("SMTP_USER or SMTP_PASS is not set in production");
+    }
+
+    options.auth = {
+      user: SMTP_USER,
+      pass: SMTP_PASS,
+      method: "LOGIN",
+    };
+  }
+
+  smtpTransport = nodemailer.createTransport(options);
 
   // 実行時に効いている値を確認
   console.log("[SMTP CONFIG]", {
