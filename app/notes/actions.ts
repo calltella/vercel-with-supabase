@@ -1,9 +1,9 @@
 "use server";
 
-import  prisma  from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { createNote } from "@/src/service/notes.service";
 
-export async function createNote(formData: FormData) {
+export async function createNoteAction(formData: FormData) {
   const title = formData.get("title");
   const content = formData.get("content");
 
@@ -15,13 +15,7 @@ export async function createNote(formData: FormData) {
     throw new Error("Title is required");
   }
 
-  await prisma.notes.create({
-    data: {
-      title,
-      content,
-    },
-  });
+  await createNote({ title, content });
 
-  // /notes を再検証 → 一覧が更新される
   revalidatePath("/notes");
 }
